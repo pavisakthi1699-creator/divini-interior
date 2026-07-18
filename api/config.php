@@ -6,9 +6,12 @@
 // ============================================================
 
 // ─── Detect environment ────────────────────────────────────
-$isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', [
-    'localhost', '127.0.0.1', 'localhost:80', 'localhost:8080',
-]);
+$httpHost = $_SERVER['HTTP_HOST'] ?? '';
+$hostName = parse_url('http://' . $httpHost, PHP_URL_HOST) ?: $httpHost;
+
+$isLocal = in_array($hostName, ['localhost', '127.0.0.1', '::1'])
+    || empty($hostName)
+    || php_sapi_name() === 'cli';
 
 // ─── Database ─────────────────────────────────────────────
 if ($isLocal) {
