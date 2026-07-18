@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 25% 98%;
+    --foreground: 30 30% 14%;
+
+    --card: 30 20% 96%;
+    --card-foreground: 30 30% 14%;
+
+    --popover: 30 25% 98%;
+    --popover-foreground: 30 30% 14%;
+
+    --primary: 30 25% 42%;
+    --primary-foreground: 30 25% 98%;
+
+    --secondary: 30 18% 93%;
+    --secondary-foreground: 30 30% 20%;
+
+    --muted: 30 15% 92%;
+    --muted-foreground: 30 12% 42%;
+
+    --accent: 30 20% 58%;
+    --accent-foreground: 30 30% 14%;
+
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 30 25% 98%;
+
+    --border: 30 18% 86%;
+    --input: 30 18% 86%;
+    --ring: 30 25% 42%;
+
+    --radius: 0.25rem;
+
+    --gold: 30 25% 42%;
+    --gold-light: 30 20% 58%;
+    --gold-dark: 30 30% 28%;
+    --cream: 30 25% 97%;
+    --charcoal: 30 30% 14%;
+    --charcoal-light: 30 20% 24%;
+    --warm-gray: 30 10% 50%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 12%;
+    --sidebar-primary: 30 8% 35%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 12%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 30 8% 35%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+  }
+
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-serif {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .font-sans {
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-gold-gradient {
+    background: linear-gradient(135deg, hsl(30 20% 58%), hsl(30 25% 42%), hsl(30 30% 28%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-gold-gradient {
+    border-image: linear-gradient(135deg, hsl(30 20% 58%), hsl(30 25% 42%), hsl(30 30% 28%)) 1;
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, hsl(30 20% 58%), hsl(30 25% 42%), hsl(30 30% 28%));
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(30 25% 42% / 0.08), transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* ── Admin dark panel tokens ───────────────────────────── */
+  .admin-surface {
+    background: #13100c;
+    color: rgba(255,255,255,0.75);
+  }
+
+  /* Glass card used across all admin pages */
+  .admin-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.015) 100%);
+    border: 1px solid rgba(201,169,110,0.10);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+  }
+
+  /* Subtle inner glow on hover */
+  .admin-card-hover {
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .admin-card-hover:hover {
+    border-color: rgba(201,169,110,0.22);
+    box-shadow: 0 0 0 1px rgba(201,169,110,0.08), 0 8px 32px rgba(0,0,0,0.35);
+  }
+
+  /* Gold accent text */
+  .admin-gold {
+    color: #C9A96E;
+  }
+
+  /* Admin table row */
+  .admin-row {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  .admin-row:hover {
+    background: rgba(201,169,110,0.04);
+  }
+
+  /* Admin input */
+  .admin-input {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    color: rgba(255,255,255,0.80) !important;
+    border-radius: 10px !important;
+  }
+  .admin-input::placeholder { color: rgba(255,255,255,0.22) !important; }
+  .admin-input:focus {
+    border-color: rgba(201,169,110,0.50) !important;
+    box-shadow: 0 0 0 3px rgba(201,169,110,0.12) !important;
+    outline: none !important;
+  }
+
+  /* Admin badge */
+  .admin-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* Gold button */
+  .admin-btn-gold {
+    background: linear-gradient(135deg, #C9A96E, #8B6914) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.15em !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 4px 20px rgba(201,169,110,0.25) !important;
+    transition: opacity 0.2s, box-shadow 0.2s !important;
+  }
+  .admin-btn-gold:hover:not(:disabled) {
+    opacity: 0.92 !important;
+    box-shadow: 0 6px 28px rgba(201,169,110,0.35) !important;
+  }
+  .admin-btn-gold:disabled { opacity: 0.5 !important; }
+
+  /* Stat number */
+  .admin-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1;
+  }
+
+  @keyframes admin-fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .admin-fade-up {
+    animation: admin-fade-up 0.45s ease forwards;
+  }
+  .admin-fade-up-1 { animation-delay: 0.05s; opacity: 0; }
+  .admin-fade-up-2 { animation-delay: 0.10s; opacity: 0; }
+  .admin-fade-up-3 { animation-delay: 0.15s; opacity: 0; }
+  .admin-fade-up-4 { animation-delay: 0.20s; opacity: 0; }
+  .admin-fade-up-5 { animation-delay: 0.25s; opacity: 0; }
+}
