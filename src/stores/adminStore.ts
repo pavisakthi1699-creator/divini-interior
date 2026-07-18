@@ -5,27 +5,25 @@ import type { AdminUser } from '@/lib/api';
 
 interface AdminStore {
   user: AdminUser | null;
-  // adminProfile is an alias for user — used by AdminLayout and AdminDashboard
-  adminProfile: AdminUser | null;
+  adminProfile: AdminUser | null; // alias kept for backward compat
   isLoading: boolean;
   error: string | null;
 
-  signIn: (email: string, password: string) => Promise<boolean>;
-  signOut: () => Promise<void>;
-  loadMe: () => Promise<void>;
-  clearError: () => void;
-
+  signIn:          (email: string, password: string) => Promise<boolean>;
+  signOut:         () => Promise<void>;
+  loadMe:          () => Promise<void>;
+  clearError:      () => void;
   isAuthenticated: () => boolean;
-  canEdit: () => boolean;
+  canEdit:         () => boolean;
 }
 
 export const useAdminStore = create<AdminStore>()(
   persist(
     (set, get) => ({
-      user: null,
-      adminProfile: null,   // kept in sync with user
-      isLoading: false,
-      error: null,
+      user:         null,
+      adminProfile: null,
+      isLoading:    false,
+      error:        null,
 
       signIn: async (email, password) => {
         set({ isLoading: true, error: null });
@@ -46,12 +44,16 @@ export const useAdminStore = create<AdminStore>()(
         set({ user: null, adminProfile: null });
       },
 
+      // loadMe — silently refreshes user from server using stored JWT.
+      // On any failure it removes the bad token so the guard redirects cleanly.
       loadMe: async () => {
-        if (!getToken()) return;
+        const token = getToken();
+        if (!token) return;
         try {
           const user = await authApi.me();
           set({ user, adminProfile: user });
         } catch {
+          // Token is invalid or expired — clear everything
           removeToken();
           set({ user: null, adminProfile: null });
         }
@@ -67,8 +69,8 @@ export const useAdminStore = create<AdminStore>()(
       },
     }),
     {
-      name: 'di-admin',
-      storage: createJSONStorage(() => localStorage),
+      name:       'di-admin',
+      storage:    createJSONStorage(() => localStorage),
       partialize: (s) => ({ user: s.user, adminProfile: s.adminProfile }),
     }
   )

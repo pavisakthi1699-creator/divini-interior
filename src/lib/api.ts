@@ -36,14 +36,41 @@ async function request<T>(
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string>),
   };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}/${path}`, { ...options, headers });
-  const json: ApiResponse<T> = await res.json();
+  // Only send admin token on admin-only endpoints or write operations
+  const method      = (options.method ?? 'GET').toUpperCase();
+  const isWriteOp   = method !== 'GET';
+  const isAdminOnly = [
+    'auth.php', 'users.php', 'dashboard.php',
+    'orders.php', 'customers.php',
+  ].some(p => path.includes(p));
+  const isAdminWrite = isWriteOp && [
+    'products.php', 'blogs.php',
+  ].some(p => path.includes(p));
+
+  if (token && (isAdminOnly || isAdminWrite)) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/${path}`, { ...options, headers });
+  } catch (networkErr: any) {
+    throw new Error('Network error — is XAMPP running?');
+  }
+
+  // Try to parse JSON; if it fails (e.g. HTML error page) give a clear message
+  let json: ApiResponse<T>;
+  try {
+    json = await res.json();
+  } catch {
+    throw new Error(`Server returned non-JSON response (status ${res.status})`);
+  }
 
   if (!res.ok || !json.success) {
     throw new Error(json.error ?? `API error ${res.status}`);
   }
+
   return json.data as T;
 }
 

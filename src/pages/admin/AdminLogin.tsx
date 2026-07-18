@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff, Loader2, ArrowRight, Lock } from 'lucide-react';
+import { Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
 import { useAdminStore } from '@/stores/adminStore';
 
 const schema = z.object({
@@ -27,80 +27,87 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex min-h-screen w-full bg-white">
 
-      {/* ── Left — olive hero image (like reference) ── */}
-      <div
-        className="hidden lg:flex lg:w-[48%] relative flex-col justify-between p-12 overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#4a5240 0%,#3a4132 40%,#2c3226 100%)' }}
-      >
-        {/* Subtle texture overlay */}
-        <div className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=1200&q=70)', backgroundSize: 'cover', backgroundPosition: 'center', mixBlendMode: 'multiply' }} />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom,rgba(60,70,50,0.3) 0%,rgba(30,36,26,0.7) 100%)' }} />
+      {/* ── Left — black brand panel ── */}
+      <div className="hidden lg:flex lg:w-[45%] flex-col justify-between bg-black p-12 relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
 
-        {/* Logo top-left */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
-              <span className="font-display text-base font-bold text-white">DI</span>
-            </div>
-            <div>
-              <p className="font-display text-white text-sm font-medium tracking-wide leading-none">Divine Interior</p>
-              <p className="font-sans text-[9px] uppercase tracking-[0.3em] mt-0.5 text-white/50">Admin Portal</p>
-            </div>
+        {/* Top — logo */}
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20">
+            <span className="font-display text-base font-bold text-white">DI</span>
+          </div>
+          <div>
+            <p className="font-display text-white text-sm font-semibold tracking-wide leading-none">Divine Interior</p>
+            <p className="font-sans text-[9px] uppercase tracking-widest mt-0.5 text-white/40">Admin Portal</p>
           </div>
         </div>
 
-        {/* Bottom hero text */}
+        {/* Middle — product image */}
+        <div className="relative z-10 flex-1 flex items-center justify-center py-8">
+          <img
+            src="https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=800&q=80"
+            alt="Ergonomic Chair"
+            className="max-h-72 w-auto object-contain opacity-80"
+            style={{ filter: 'grayscale(100%) contrast(1.1)' }}
+          />
+        </div>
+
+        {/* Bottom — copy */}
         <div className="relative z-10">
-          <h2 className="font-display text-4xl font-light text-white leading-tight mb-4">
-            Manage your<br />
-            <span className="italic">store with ease.</span>
+          <div className="mb-4 h-px w-10 bg-white/30" />
+          <h2 className="font-display text-3xl font-light text-white leading-tight mb-3">
+            Your store.<br />
+            <span className="text-white/60">Your control.</span>
           </h2>
-          <p className="font-sans text-sm font-light text-white/55 max-w-xs leading-relaxed">
-            Complete control over your products, orders, customers, and content — all in one place.
+          <p className="font-sans text-sm text-white/40 max-w-xs leading-relaxed">
+            Manage products, orders, customers and content from one clean dashboard.
           </p>
-          <div className="mt-8 flex items-center gap-2">
-            <div className="h-px w-8 bg-white/30" />
-            <p className="font-sans text-[10px] uppercase tracking-[0.25em] text-white/40">
-              Divine Interior Studio
-            </p>
+          <div className="mt-8 flex gap-6">
+            {[['10+','Products'],['100%','Uptime'],['24/7','Access']].map(([n,l]) => (
+              <div key={l}>
+                <p className="font-display text-xl font-semibold text-white">{n}</p>
+                <p className="font-sans text-[10px] uppercase tracking-wider text-white/35 mt-0.5">{l}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* ── Right — clean white form (matches reference) ── */}
-      <div className="flex flex-1 flex-col items-center justify-center bg-[#F8F7F5] px-8 py-12 lg:px-14">
+      {/* ── Right — white form ── */}
+      <div className="flex flex-1 flex-col items-center justify-center bg-white px-8 py-12 lg:px-14">
         <div className="w-full max-w-[360px]">
 
           {/* Mobile logo */}
           <div className="mb-8 flex lg:hidden items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: '#3a4132' }}>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-black">
               <span className="font-display text-sm font-bold text-white">DI</span>
             </div>
-            <span className="font-display text-sm font-medium text-gray-800 tracking-wide">Divine Interior</span>
-          </div>
-
-          {/* SECURE PORTAL badge */}
-          <div className="mb-6 flex items-center gap-1.5">
-            <Lock className="h-3 w-3 text-gray-400" />
-            <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-gray-400 font-medium">
-              Secure Portal
-            </span>
+            <span className="font-display text-sm font-bold text-black tracking-wide">Divine Interior</span>
           </div>
 
           {/* Heading */}
-          <h1 className="font-display text-3xl font-normal text-gray-900 mb-1.5 tracking-tight">
-            Welcome Back
+          <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.3em] text-gray-400 mb-2">
+            Admin Portal
+          </p>
+          <h1 className="font-display text-3xl font-normal text-black mb-2 tracking-tight">
+            Welcome back
           </h1>
-          <p className="font-sans text-sm text-gray-500 mb-8">
-            Enter your credentials to access your sanctuary.
+          <p className="font-sans text-sm text-gray-400 mb-8">
+            Sign in to your admin dashboard
           </p>
 
-          {/* Tab-style toggle (decorative — only Login active) */}
-          <div className="flex rounded-full bg-white border border-gray-200 p-1 mb-8 shadow-sm">
-            <div className="flex-1 rounded-full bg-gray-900 py-2.5 text-center">
+          {/* Tab toggle */}
+          <div className="flex rounded-lg bg-gray-100 p-1 mb-8">
+            <div className="flex-1 rounded-md bg-black py-2.5 text-center shadow-sm">
               <span className="font-sans text-xs font-semibold text-white">Login</span>
             </div>
             <div className="flex-1 py-2.5 text-center">
@@ -110,29 +117,26 @@ const AdminLogin = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
-            {/* Email */}
             <div className="space-y-1.5">
-              <label className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-                Identifier
+              <label className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                Email Address
               </label>
               <input
                 type="email"
                 autoComplete="email"
                 placeholder="admin@divine.com"
-                className="w-full h-11 rounded-xl border border-gray-200 bg-white px-4 font-sans text-sm text-gray-900 placeholder-gray-300 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-200 shadow-sm"
+                className="w-full h-11 rounded-lg border border-gray-200 bg-gray-50 px-4 font-sans text-sm text-black placeholder-gray-300 outline-none transition focus:border-black focus:bg-white focus:ring-2 focus:ring-black/10"
                 {...register('email')}
               />
               {errors.email && <p className="font-sans text-xs text-red-500">{errors.email.message}</p>}
             </div>
 
-            {/* Password */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-                  Security Key
+                <label className="font-sans text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                  Password
                 </label>
-                <button type="button" className="font-sans text-[10px] font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors">
+                <button type="button" className="font-sans text-[10px] font-semibold text-gray-400 hover:text-black transition-colors">
                   Forgot?
                 </button>
               </div>
@@ -140,14 +144,14 @@ const AdminLogin = () => {
                 <input
                   type={showPwd ? 'text' : 'password'}
                   autoComplete="current-password"
-                  placeholder="••••••••••"
-                  className="w-full h-11 rounded-xl border border-gray-200 bg-white px-4 pr-11 font-sans text-sm text-gray-900 placeholder-gray-300 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-200 shadow-sm"
+                  placeholder="••••••••"
+                  className="w-full h-11 rounded-lg border border-gray-200 bg-gray-50 px-4 pr-11 font-sans text-sm text-black placeholder-gray-300 outline-none transition focus:border-black focus:bg-white focus:ring-2 focus:ring-black/10"
                   {...register('password')}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPwd(!showPwd)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-350 hover:text-gray-500 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors"
                 >
                   {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -155,42 +159,32 @@ const AdminLogin = () => {
               {errors.password && <p className="font-sans text-xs text-red-500">{errors.password.message}</p>}
             </div>
 
-            {/* Server error */}
             {error && (
-              <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3">
+              <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3">
                 <p className="font-sans text-xs text-red-600">{error}</p>
               </div>
             )}
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-2 flex w-full items-center justify-center gap-2 h-12 rounded-xl bg-gray-900 font-sans text-sm font-semibold text-white transition-all hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              className="mt-1 flex w-full items-center justify-center gap-2 h-11 rounded-lg bg-black font-sans text-sm font-semibold text-white transition-all hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading
                 ? <><Loader2 className="h-4 w-4 animate-spin" /> Signing in…</>
-                : <>SIGN IN <ArrowRight className="h-4 w-4" /></>
+                : <>Sign In <ArrowRight className="h-4 w-4" /></>
               }
             </button>
           </form>
 
-          {/* Return to store */}
-          <div className="mt-8 flex items-center justify-center gap-2">
-            <ArrowRight className="h-3 w-3 rotate-180 text-gray-400" />
-            <Link to="/" className="font-sans text-xs font-medium text-gray-400 hover:text-gray-700 transition-colors uppercase tracking-wider">
-              Return to Sanctuary
+          <div className="mt-8 flex items-center justify-center">
+            <Link to="/" className="font-sans text-xs text-gray-400 hover:text-black transition-colors flex items-center gap-1.5">
+              <ArrowRight className="h-3 w-3 rotate-180" />
+              Back to store
             </Link>
           </div>
-
-          {/* Fine print */}
-          <p className="mt-6 text-center font-sans text-[10px] leading-relaxed text-gray-350">
-            By continuing, you agree to Divine Interior's Terms of Service<br />
-            and Privacy Policy, distributed to consented visitors.
-          </p>
         </div>
       </div>
-
     </div>
   );
 };

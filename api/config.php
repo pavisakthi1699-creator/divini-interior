@@ -1,59 +1,77 @@
 <?php
 // ============================================================
 // Divine Interior — API Config
-// Place the entire /api folder inside htdocs/divineinterior/
-// on XAMPP. Accessible at: http://localhost/divineinterior/api/
+// XAMPP local: C:\xampp\htdocs\divineinterior\api\
+// Live server : /public_html/api/  (or subfolder per host)
 // ============================================================
 
+// ─── Detect environment ────────────────────────────────────
+$isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', [
+    'localhost', '127.0.0.1', 'localhost:80', 'localhost:8080',
+]);
+
 // ─── Database ─────────────────────────────────────────────
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'divine_interior');
-define('DB_USER', 'root');
-define('DB_PASS', '');          // XAMPP default: empty. Change for live server.
-define('DB_PORT', 3307);
+if ($isLocal) {
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'divine_interior');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_PORT', 3307);          // XAMPP default port
+} else {
+    // ─── LIVE SERVER — fill these before going live ────────
+    define('DB_HOST', 'localhost');   // usually localhost on cPanel
+    define('DB_NAME', 'your_db_name');  // ← change to your cPanel DB name
+    define('DB_USER', 'your_db_user');  // ← change to your cPanel DB user
+    define('DB_PASS', 'your_db_pass');  // ← change to your cPanel DB password
+    define('DB_PORT', 3306);            // standard MySQL port on live
+}
 
 // ─── JWT ──────────────────────────────────────────────────
 define('JWT_SECRET',          'divine-interior-secret-key-change-in-production-2024');
-define('JWT_EXPIRY',          86400);   // 24 hours (admin)
+define('JWT_EXPIRY',          86400);    // 24 hours
 define('CUSTOMER_JWT_SECRET', 'divine-customer-secret-key-change-in-production-2024');
-define('CUSTOMER_JWT_EXPIRY', 604800);  // 7 days (customer)
+define('CUSTOMER_JWT_EXPIRY', 604800);   // 7 days
 
-// ─── Email / SMTP ─────────────────────────────────────────
-// Uses PHP mail() by default (works on XAMPP with sendmail/hMailServer).
-// For production, set USE_SMTP=true and fill SMTP credentials.
+// ─── Email ────────────────────────────────────────────────
 define('USE_SMTP',       false);
 define('SMTP_HOST',      'smtp.gmail.com');
 define('SMTP_PORT',      587);
-define('SMTP_USER',      'your@gmail.com');       // ← change this
-define('SMTP_PASS',      'your-app-password');    // ← change this (App Password)
-define('SMTP_SECURE',    'tls');                  // tls or ssl
-
+define('SMTP_USER',      'your@gmail.com');
+define('SMTP_PASS',      'your-app-password');
+define('SMTP_SECURE',    'tls');
 define('MAIL_FROM',      'noreply@divineinterior.com');
 define('MAIL_FROM_NAME', 'Divine Interior');
-define('ADMIN_EMAIL',    'admin@divine.com');     // ← order alert goes here
+define('ADMIN_EMAIL',    'admin@divine.com');
 
-// ─── CORS — allow Vite dev server & same origin ───────────
+// ─── CORS ─────────────────────────────────────────────────
 $allowed_origins = [
-    'http://localhost:5173',    // Vite default
-    'http://localhost:8080',    // Vite on port 8080 (this project)
-    'http://localhost:3000',
     'http://localhost',
+    'http://localhost:5173',
+    'http://localhost:8080',
+    'http://127.0.0.1',
     'http://127.0.0.1:5173',
     'http://127.0.0.1:8080',
+    // ↓ Add your live domain here
+    'https://yourdomain.com',
+    'https://www.yourdomain.com',
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowed_origins)) {
     header("Access-Control-Allow-Origin: $origin");
+} elseif (!$isLocal) {
+    // On live server, allow same origin (no Origin header = same-origin = ok)
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    header("Access-Control-Allow-Origin: {$scheme}://{$_SERVER['HTTP_HOST']}");
 } else {
-    header('Access-Control-Allow-Origin: http://localhost:5173');
+    header('Access-Control-Allow-Origin: http://localhost:8080');
 }
+
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json; charset=utf-8');
 
-// Handle CORS preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;

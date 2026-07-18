@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useCartSync } from "@/hooks/useCartSync";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Loader2 } from "lucide-react";
 
 // ── Storefront pages ──────────────────────────────────────
@@ -44,35 +44,82 @@ import { getToken, getCustomerToken } from "./lib/api";
 
 const queryClient = new QueryClient();
 
-// ── Admin protected route ─────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// AdminGuard — properly waits for auth check, never flickers
+// ─────────────────────────────────────────────────────────
 const AdminGuard = () => {
-  const { user, loadMe } = useAdminStore();
-  const [checking, setChecking] = useState(true);
+  const { user, loadMe, signOut } = useAdminStore();
+  const [status, setStatus] = useState<'checking' | 'ok' | 'denied'>('checking');
+  const checked = useRef(false);
 
   useEffect(() => {
-    if (!getToken()) { setChecking(false); return; }
-    if (user)        { setChecking(false); return; }
-    loadMe().finally(() => setChecking(false));
+    if (checked.current) return;
+    checked.current = true;
+
+    const token = getToken();
+
+    // No token at all → go to login
+    if (!token) {
+      setStatus('denied');
+      return;
+    }
+
+    // Token exists — if we already have user in store, trust it
+    if (user) {
+      setStatus('ok');
+      return;
+    }
+
+    // Token exists but no user in store → try to reload from server
+    loadMe()
+      .then(() => {
+        // After loadMe, check store again
+        const freshUser = useAdminStore.getState().user;
+        if (freshUser) {
+          setStatus('ok');
+        } else {
+          setStatus('denied');
+        }
+      })
+      .catch(() => {
+        setStatus('denied');
+      });
   }, []);
 
-  if (checking) {
+  if (status === 'checking') {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: '#0f0d0b' }}>
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#C9A96E' }} />
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <p className="font-sans text-xs text-gray-400">Loading…</p>
+        </div>
       </div>
     );
   }
-  if (!getToken() || !user) return <Navigate to="/studio/login" replace />;
-  return <AdminLayout><Outlet /></AdminLayout>;
+
+  if (status === 'denied') {
+    return <Navigate to="/studio/login" replace />;
+  }
+
+  return (
+    <AdminLayout>
+      <Outlet />
+    </AdminLayout>
+  );
 };
 
+// ─────────────────────────────────────────────────────────
+// AdminLoginGuard — redirect if already logged in
+// ─────────────────────────────────────────────────────────
 const AdminLoginGuard = () => {
   const { user } = useAdminStore();
   if (getToken() && user) return <Navigate to="/studio" replace />;
   return <AdminLogin />;
 };
 
-// ── App routes ────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// App routes
+// ─────────────────────────────────────────────────────────
 const AppContent = () => {
   useCartSync();
 
@@ -84,47 +131,44 @@ const AppContent = () => {
   return (
     <Routes>
       {/* ── Storefront ── */}
-      <Route path="/"                    element={<Index />} />
-      <Route path="/shop"                element={<Shop />} />
-      <Route path="/sale"                element={<Sale />} />
-      <Route path="/about"               element={<About />} />
-      <Route path="/contact"             element={<Contact />} />
-      <Route path="/product/:handle"     element={<ProductDetail />} />
-      <Route path="/blogs"               element={<Blogs />} />
-      <Route path="/blog/:slug"          element={<BlogDetail />} />
+      <Route path="/"                   element={<Index />} />
+      <Route path="/shop"               element={<Shop />} />
+      <Route path="/sale"               element={<Sale />} />
+      <Route path="/about"              element={<About />} />
+      <Route path="/contact"            element={<Contact />} />
+      <Route path="/product/:handle"    element={<ProductDetail />} />
+      <Route path="/blogs"              element={<Blogs />} />
+      <Route path="/blog/:slug"         element={<BlogDetail />} />
 
       {/* ── Customer auth ── */}
-      <Route path="/auth"                element={<CustomerAuth />} />
-
-      {/* ── Checkout flow ── */}
-      <Route path="/checkout"            element={<Checkout />} />
-      <Route path="/order-confirmation"  element={<OrderConfirmation />} />
+      <Route path="/auth"               element={<CustomerAuth />} />
+      <Route path="/checkout"           element={<Checkout />} />
+      <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
       {/* ── Customer account ── */}
-      <Route path="/account"             element={<AccountLayout />}>
-        <Route index                     element={<Navigate to="/account/orders" replace />} />
-        <Route path="orders"             element={<AccountOrders />} />
-        <Route path="profile"            element={<AccountProfile />} />
-        <Route path="addresses"          element={<AccountAddresses />} />
+      <Route path="/account"            element={<AccountLayout />}>
+        <Route index                    element={<Navigate to="/account/orders" replace />} />
+        <Route path="orders"            element={<AccountOrders />} />
+        <Route path="profile"           element={<AccountProfile />} />
+        <Route path="addresses"         element={<AccountAddresses />} />
       </Route>
 
-      {/* ── Admin — /studio prefix ── */}
-      <Route path="/studio/login"        element={<AdminLoginGuard />} />
-
-      <Route path="/studio"              element={<AdminGuard />}>
-        <Route index                     element={<AdminDashboard />} />
-        <Route path="products"           element={<AdminProducts />} />
-        <Route path="orders"             element={<AdminOrders />} />
-        <Route path="blogs"              element={<AdminBlogs />} />
-        <Route path="customers"          element={<AdminCustomers />} />
-        <Route path="users"              element={<AdminUsers />} />
+      {/* ── Admin ── */}
+      <Route path="/studio/login"       element={<AdminLoginGuard />} />
+      <Route path="/studio"             element={<AdminGuard />}>
+        <Route index                    element={<AdminDashboard />} />
+        <Route path="products"          element={<AdminProducts />} />
+        <Route path="orders"            element={<AdminOrders />} />
+        <Route path="blogs"             element={<AdminBlogs />} />
+        <Route path="customers"         element={<AdminCustomers />} />
+        <Route path="users"             element={<AdminUsers />} />
       </Route>
 
-      {/* Legacy redirect — old /admin links still work */}
-      <Route path="/admin/login"         element={<Navigate to="/studio/login" replace />} />
-      <Route path="/admin/*"             element={<Navigate to="/studio" replace />} />
+      {/* Legacy redirects */}
+      <Route path="/admin/login"        element={<Navigate to="/studio/login" replace />} />
+      <Route path="/admin/*"            element={<Navigate to="/studio" replace />} />
 
-      <Route path="*"                    element={<NotFound />} />
+      <Route path="*"                   element={<NotFound />} />
     </Routes>
   );
 };

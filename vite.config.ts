@@ -12,21 +12,21 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
     proxy: {
-      // Proxies /api/* → XAMPP Apache at http://localhost/divine-interior/api/*
-      // Make sure the project is at: C:\xampp\htdocs\divine-interior\
       '/api': {
         target: 'http://127.0.0.1:80',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/divineinterior/api'),
-        // Log proxy errors to terminal so you can see what's happening
         configure: (proxy) => {
           proxy.on('error', (err) => {
             console.log('\n[Proxy Error] Is XAMPP running?', err.message);
           });
-          proxy.on('proxyReq', (_proxyReq, req) => {
-            console.log('[Proxy] →', req.method, req.url);
-          });
         },
+      },
+      // Proxy product images from XAMPP so /products/xxx.png works in dev
+      '/products': {
+        target: 'http://127.0.0.1:80',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/products/, '/divineinterior/products'),
       },
     },
   },

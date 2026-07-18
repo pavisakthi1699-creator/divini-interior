@@ -125,21 +125,21 @@ const AdminProducts = () => {
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-light tracking-wide">Products</h1>
-          <p className="font-sans text-sm text-muted-foreground">{total} total</p>
+          <h1 className="font-display text-2xl font-semibold text-black">Products</h1>
+          <p className="font-sans text-sm text-gray-400">{total} total products</p>
         </div>
-        <Button onClick={openCreate} className="bg-primary font-sans text-xs font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary/90">
+        <Button onClick={openCreate} className="bg-black text-white hover:bg-gray-900 font-sans text-xs font-bold uppercase tracking-widest rounded-lg">
           <Plus className="mr-2 h-4 w-4" /> Add Product
         </Button>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search…" className="pl-9 font-sans text-sm" value={search} onChange={e => setSearch(e.target.value)} />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input placeholder="Search by name or SKU…" className="pl-9 font-sans text-sm bg-white border-gray-200 focus:border-black focus:ring-black/10" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <Select value={catFilter} onValueChange={setCatFilter}>
-          <SelectTrigger className="w-full sm:w-48 font-sans text-sm"><SelectValue placeholder="All categories" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-48 font-sans text-sm bg-white border-gray-200"><SelectValue placeholder="All categories" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
             {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
@@ -147,59 +147,59 @@ const AdminProducts = () => {
         </Select>
       </div>
 
-      <div className="rounded-lg border border-border bg-card overflow-hidden">
+      <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
         {loading ? (
-          <div className="flex h-48 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+          <div className="flex h-48 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-black" /></div>
         ) : products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16">
-            <Package className="mb-3 h-10 w-10 text-muted-foreground/40" />
-            <p className="font-sans text-sm text-muted-foreground">No products found.</p>
-            <Button variant="outline" size="sm" onClick={openCreate} className="mt-3 font-sans text-xs">Add your first product</Button>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Package className="mb-3 h-10 w-10 text-gray-200" />
+            <p className="font-sans text-sm text-gray-400">No products found.</p>
+            <Button variant="outline" size="sm" onClick={openCreate} className="mt-3 font-sans text-xs border-gray-200 hover:border-black hover:bg-black hover:text-white transition-all">Add your first product</Button>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-border bg-muted/30">
+              <thead className="border-b border-gray-100 bg-gray-50">
                 <tr>{['Product','Category','Price','Stock','Active','Featured','Actions'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left font-sans text-[10px] font-semibold uppercase tracking-wider text-gray-400">{h}</th>
                 ))}</tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-gray-50">
                 {products.map(p => (
-                  <tr key={p.id} className="hover:bg-muted/20 transition-colors">
+                  <tr key={p.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded border border-border bg-muted">
-                          {p.images[0] ? <img src={p.images[0]} alt={p.title} className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center"><ImageOff className="h-4 w-4 text-muted-foreground/40" /></div>}
+                        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                          {p.images[0] ? <img src={p.images[0]} alt={p.title} className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center"><ImageOff className="h-4 w-4 text-gray-300" /></div>}
                         </div>
                         <div>
-                          <p className="font-sans text-sm font-medium line-clamp-1">{p.title}</p>
-                          <p className="font-sans text-xs text-muted-foreground">SKU: {p.sku ?? '—'}</p>
+                          <p className="font-sans text-sm font-semibold text-black line-clamp-1">{p.title}</p>
+                          <p className="font-sans text-xs text-gray-400">SKU: {p.sku ?? '—'}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-sans text-xs text-muted-foreground">{p.category}</td>
+                    <td className="px-4 py-3 font-sans text-xs text-gray-500">{p.category}</td>
                     <td className="px-4 py-3">
-                      <p className="font-sans text-sm font-semibold">₹{Number(p.price).toLocaleString('en-IN')}</p>
-                      {p.compare_at_price && <p className="font-sans text-xs text-muted-foreground line-through">₹{Number(p.compare_at_price).toLocaleString('en-IN')}</p>}
+                      <p className="font-sans text-sm font-bold text-black">₹{Number(p.price).toLocaleString('en-IN')}</p>
+                      {p.compare_at_price && <p className="font-sans text-xs text-gray-400 line-through">₹{Number(p.compare_at_price).toLocaleString('en-IN')}</p>}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={Number(p.stock) > 10 ? 'outline' : 'secondary'} className={`font-sans text-xs ${Number(p.stock) > 10 ? 'text-green-700 border-green-200 bg-green-50' : ''}`}>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 font-sans text-[11px] font-semibold ${Number(p.stock) > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
                         {Number(p.stock) > 0 ? `${p.stock} in stock` : 'Out of stock'}
-                      </Badge>
+                      </span>
                     </td>
                     <td className="px-4 py-3"><Switch checked={Boolean(p.is_active)} onCheckedChange={() => toggleActive(p)} /></td>
                     <td className="px-4 py-3">
-                      {p.is_featured ? <Badge className="bg-primary/10 text-primary border-primary/20 font-sans text-xs">Featured</Badge> : <span className="font-sans text-xs text-muted-foreground">—</span>}
+                      {p.is_featured ? <span className="inline-flex items-center rounded-full bg-black px-2.5 py-1 font-sans text-[11px] font-semibold text-white">Featured</span> : <span className="font-sans text-xs text-gray-300">—</span>}
                     </td>
                     <td className="px-4 py-3">
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                        <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-gray-100"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => openEdit(p)}><Edit2 className="mr-2 h-3.5 w-3.5" /> Edit</DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleDuplicate(p)}><Copy className="mr-2 h-3.5 w-3.5" /> Duplicate</DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => setDelTarget(p)} className="text-destructive focus:text-destructive"><Trash2 className="mr-2 h-3.5 w-3.5" /> Delete</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setDelTarget(p)} className="text-red-600 focus:text-red-600"><Trash2 className="mr-2 h-3.5 w-3.5" /> Delete</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </td>
@@ -213,7 +213,7 @@ const AdminProducts = () => {
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle className="font-display text-lg font-light tracking-wide">{editing ? 'Edit Product' : 'Add New Product'}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle className="font-display text-lg font-semibold text-black">{editing ? 'Edit Product' : 'Add New Product'}</DialogTitle></DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
@@ -277,8 +277,8 @@ const AdminProducts = () => {
               </div>
             </div>
             <DialogFooter className="gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="font-sans text-xs">Cancel</Button>
-              <Button type="submit" disabled={saving} className="bg-primary font-sans text-xs font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary/90">
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="font-sans text-xs border-gray-200">Cancel</Button>
+              <Button type="submit" disabled={saving} className="bg-black text-white hover:bg-gray-900 font-sans text-xs font-bold uppercase tracking-widest rounded-lg">
                 {saving ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving…</> : editing ? 'Update' : 'Create'}
               </Button>
             </DialogFooter>
