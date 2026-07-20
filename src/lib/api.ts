@@ -4,8 +4,9 @@
 // ============================================================
 
 // In dev, Vite proxies /api → http://localhost/divine-interior/api
-// In production, /api resolves to the same domain's PHP folder.
-const API_BASE = '/api';
+// In production/Vercel, VITE_API_BASE environment variable can point to live PHP server (e.g. https://yourdomain.com/api)
+const RAW_API_BASE = (import.meta.env.VITE_API_BASE as string) || '/api';
+const API_BASE = RAW_API_BASE.replace(/\/+$/, '');
 
 // ─── Token storage ───────────────────────────────────────────
 const TOKEN_KEY = 'di_admin_token';
@@ -56,7 +57,7 @@ async function request<T>(
   try {
     res = await fetch(`${API_BASE}/${path}`, { ...options, headers });
   } catch (networkErr: any) {
-    throw new Error('Network error — is XAMPP running?');
+    throw new Error('Network error — unable to reach API server. If running locally, check if XAMPP is running. If deployed on Vercel, verify VITE_API_BASE in Vercel settings.');
   }
 
   // Try to parse JSON; if it fails (e.g. HTML error page) give a clear message
