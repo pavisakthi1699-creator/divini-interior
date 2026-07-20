@@ -57,18 +57,22 @@ async function request<T>(
   try {
     res = await fetch(`${API_BASE}/${path}`, { ...options, headers });
   } catch (networkErr: any) {
-    throw new Error('Network error — unable to reach API server. If running locally, check if XAMPP is running. If deployed on Vercel, verify VITE_API_BASE in Vercel settings.');
+    throw new Error('API_OFFLINE: Network error');
   }
 
-  // Try to parse JSON; if it fails (e.g. HTML error page) give a clear message
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || contentType.includes('text/html') || !contentType.includes('application/json')) {
+    throw new Error(`API_OFFLINE: Non-JSON or error response (${res.status})`);
+  }
+
   let json: ApiResponse<T>;
   try {
     json = await res.json();
   } catch {
-    throw new Error(`Server returned non-JSON response (status ${res.status})`);
+    throw new Error(`API_OFFLINE: Invalid JSON response (${res.status})`);
   }
 
-  if (!res.ok || !json.success) {
+  if (!json.success) {
     throw new Error(json.error ?? `API error ${res.status}`);
   }
 
@@ -472,9 +476,27 @@ async function customerRequest<T>(path: string, options: RequestInit = {}): Prom
     ...(options.headers as Record<string, string>),
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res  = await fetch(`${API_BASE}/${path}`, { ...options, headers });
-  const json: ApiResponse<T> = await res.json();
-  if (!res.ok || !json.success) throw new Error(json.error ?? `API error ${res.status}`);
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/${path}`, { ...options, headers });
+  } catch {
+    throw new Error('API_OFFLINE: Network error');
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!res.ok || contentType.includes('text/html') || !contentType.includes('application/json')) {
+    throw new Error(`API_OFFLINE: Non-JSON or error response (${res.status})`);
+  }
+
+  let json: ApiResponse<T>;
+  try {
+    json = await res.json();
+  } catch {
+    throw new Error(`API_OFFLINE: Invalid JSON response (${res.status})`);
+  }
+
+  if (!json.success) throw new Error(json.error ?? `API error ${res.status}`);
   return json.data as T;
 }
 
