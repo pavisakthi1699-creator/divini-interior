@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, TrendingDown, ShoppingCart, Users, IndianRupee, ArrowUpRight, Loader2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, ShoppingCart, Users, IndianRupee, ArrowUpRight, Loader2, ClipboardList } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { dashboardApi, type DashboardData } from '@/lib/api';
 import { useAdminStore } from '@/stores/adminStore';
@@ -99,12 +99,12 @@ const AdminDashboard = () => {
 
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard title="Total Revenue" sub="Store Revenue & Sales"
+        <StatCard title="Est. Enquiry Value" sub="Calculated reference totals"
           value={`₹${stats.total_revenue.toLocaleString('en-IN')}`} change={4.6}
           icon={IndianRupee} href="/studio/orders" linkLabel="See details" dark />
-        <StatCard title="Total Orders" sub="Order Processing"
+        <StatCard title="Total Enquiries" sub="Enquiry Processing"
           value={String(stats.total_orders)} change={3.2}
-          icon={ShoppingCart} href="/studio/orders" linkLabel="View orders" />
+          icon={ClipboardList} href="/studio/orders" linkLabel="View enquiries" />
         <StatCard title="Total Customers" sub="Customer Growth"
           value={String(stats.total_customers)} change={4.7}
           icon={Users} href="/studio/customers" linkLabel="View customers" />
@@ -113,7 +113,7 @@ const AdminDashboard = () => {
       {/* Revenue chart */}
       <div className="rounded-2xl bg-white border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-sans text-sm font-semibold text-black">Revenue Overview</h3>
+          <h3 className="font-sans text-sm font-semibold text-black">Enquiry Value Overview</h3>
           <span className="rounded-full bg-black px-3 py-1 font-sans text-[11px] font-bold text-white">Live</span>
         </div>
         <p className="font-display text-3xl font-semibold text-black mb-6">
@@ -130,25 +130,25 @@ const AdminDashboard = () => {
         </ResponsiveContainer>
       </div>
 
-      {/* Recent orders */}
+      {/* Recent enquiries */}
       <div className="rounded-2xl bg-white border border-gray-200 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h3 className="font-sans text-sm font-semibold text-black">Recent Orders</h3>
+          <h3 className="font-sans text-sm font-semibold text-black">Recent Enquiries</h3>
           <Link to="/studio/orders" className="font-sans text-xs font-semibold text-gray-500 hover:text-black transition-colors flex items-center gap-1">
             View All <ArrowUpRight className="h-3 w-3" />
           </Link>
         </div>
         {recent.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <ShoppingCart className="mb-3 h-10 w-10 text-gray-200" />
-            <p className="font-sans text-sm text-gray-400">No orders yet.</p>
+            <ClipboardList className="mb-3 h-10 w-10 text-gray-200" />
+            <p className="font-sans text-sm text-gray-400">No enquiries yet.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100">
-                  {['Customer','Order ID','Date','Total','Status'].map(h => (
+                  {['Customer','Enquiry ID','Date','Est. Value','Status'].map(h => (
                     <th key={h} className="px-5 py-3 text-left font-sans text-[10px] font-semibold uppercase tracking-wider text-gray-400">{h}</th>
                   ))}
                 </tr>

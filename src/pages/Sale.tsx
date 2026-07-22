@@ -3,45 +3,15 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, Tag, ShoppingCart } from "lucide-react";
 import { productsApi, type Product } from "@/lib/api";
-import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-// Convert MySQL product → cart shape
-function toCartProduct(p: Product) {
-  return {
-    node: {
-      id: String(p.id),
-      title: p.title,
-      description: p.description,
-      handle: p.slug,
-      priceRange: { minVariantPrice: { amount: String(p.price), currencyCode: p.currency } },
-      images: { edges: p.images.map(url => ({ node: { url, altText: p.title } })) },
-      variants: {
-        edges: [{
-          node: {
-            id: `variant-${p.id}`,
-            title: 'Default',
-            price: { amount: String(p.price), currencyCode: p.currency },
-            compareAtPrice: p.compare_at_price
-              ? { amount: String(p.compare_at_price), currencyCode: p.currency }
-              : null,
-            availableForSale: p.stock > 0,
-            selectedOptions: [{ name: 'Size', value: 'Standard' }],
-          },
-        }],
-      },
-      options: (p.options as any[]) || [],
-    },
-  };
-}
+
 
 const Sale = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading]   = useState(true);
-  const addItem   = useCartStore(s => s.addItem);
-  const isLoading = useCartStore(s => s.isLoading);
 
   useEffect(() => {
     // Fetch all active products — those with compare_at_price > price show as "sale"
@@ -57,21 +27,7 @@ const Sale = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleAddToCart = async (p: Product, e: React.MouseEvent) => {
-    e.preventDefault(); e.stopPropagation();
-    if (p.stock === 0) return;
-    const cartProduct = toCartProduct(p);
-    const variant = cartProduct.node.variants.edges[0].node;
-    await addItem({
-      product: cartProduct as any,
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity: 1,
-      selectedOptions: variant.selectedOptions,
-    });
-    toast.success("Added to cart", { description: p.title });
-  };
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -180,15 +136,9 @@ const Sale = () => {
                           </div>
                         </div>
                         <button
-                          onClick={e => handleAddToCart(p, e)}
-                          disabled={isLoading || !inStock}
-                          className={`w-full py-2 rounded-sm font-sans text-[10px] font-bold uppercase tracking-wider text-center transition-colors ${
-                            inStock
-                              ? "bg-primary hover:bg-primary/90 text-primary-foreground"
-                              : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                          }`}
+                          className="w-full py-2 rounded-sm font-sans text-[10px] font-bold uppercase tracking-wider text-center transition-colors bg-primary hover:bg-primary/90 text-primary-foreground"
                         >
-                          {isLoading ? "Adding…" : inStock ? "Add to Cart" : "Sold Out"}
+                          View Details
                         </button>
                       </div>
                     </Link>
@@ -201,6 +151,8 @@ const Sale = () => {
       </section>
 
       <Footer />
+
+
     </div>
   );
 };

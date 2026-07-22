@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, User, Heart, LogOut, ShoppingBag, MapPin, ChevronDown } from "lucide-react";
-import { CartDrawer } from "@/components/CartDrawer";
+import { Search, User, Heart, LogOut, ShoppingBag, MapPin, ChevronDown, ClipboardList } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
@@ -57,13 +56,8 @@ const Navbar = () => {
     >
       {/* Top utility row */}
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4 lg:px-12">
-        <Link to="/" className="flex flex-shrink-0 flex-col items-center">
-          <span className="font-display text-2xl font-semibold tracking-[0.15em] text-gold-gradient">
-            DI
-          </span>
-          <span className="font-sans text-[8px] font-medium uppercase tracking-[0.4em] text-muted-foreground">
-            Interior
-          </span>
+        <Link to="/" className="flex flex-shrink-0 items-center">
+          <img src="/banner/DI-logo.png" alt="Divine Interior Logo" className="h-10 w-auto md:h-12 object-contain" />
         </Link>
 
         <form onSubmit={onSearchSubmit} className="hidden flex-1 items-center md:flex">
@@ -104,7 +98,7 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/account/orders" className="flex items-center gap-2 cursor-pointer">
-                    <ShoppingBag className="h-4 w-4" /> My Orders
+                    <ClipboardList className="h-4 w-4" /> My Enquiries
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
@@ -143,7 +137,7 @@ const Navbar = () => {
             <Heart className="h-5 w-5" />
           </button>
 
-          <CartDrawer />
+          {/* CartDrawer removed for single-item RFQ modal */}
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -211,7 +205,7 @@ const Navbar = () => {
               <>
                 <Link to="/account/orders" onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-2 font-sans text-sm text-muted-foreground hover:text-foreground mb-3">
-                  <ShoppingBag className="h-4 w-4" /> My Orders
+                  <ClipboardList className="h-4 w-4" /> My Enquiries
                 </Link>
                 <Link to="/account/profile" onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-2 font-sans text-sm text-muted-foreground hover:text-foreground mb-3">

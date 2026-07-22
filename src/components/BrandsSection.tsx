@@ -1,5 +1,7 @@
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const brands = [
   {
@@ -46,37 +48,113 @@ const brands = [
   },
 ];
 
+const brandLogos = [
+  { name: "Steelcase", logo: "/brands/SteelCase-1.webp" },
+  { name: "Featherlite", logo: "/brands/Featherlite-new.webp" },
+  { name: "Haworth", logo: "/brands/Haworth-1.webp" },
+  { name: "Humanscale", logo: "/brands/Humanscale-1.webp" },
+  { name: "Vitra", logo: "/brands/vitra.png" },
+  { name: "HNI", logo: "/brands/HNI_logo.svg.webp" },
+  { name: "Orangebox", logo: "/brands/images.png" },
+];
+
 const BrandsSection = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -240, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 240, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    let intervalId: NodeJS.Timeout;
+
+    const startAutoScroll = () => {
+      intervalId = setInterval(() => {
+        if (!container) return;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (container.scrollLeft >= maxScroll - 5) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          container.scrollBy({ left: 240, behavior: "smooth" });
+        }
+      }, 3000);
+    };
+
+    startAutoScroll();
+
+    const handleMouseEnter = () => clearInterval(intervalId);
+    const handleMouseLeave = () => startAutoScroll();
+
+    container.addEventListener("mouseenter", handleMouseEnter);
+    container.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      clearInterval(intervalId);
+      if (container) {
+        container.removeEventListener("mouseenter", handleMouseEnter);
+        container.removeEventListener("mouseleave", handleMouseLeave);
+      }
+    };
+  }, []);
+
   return (
     <section className="bg-[#FAFAF8] py-12 lg:py-16 border-b border-border">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex items-center justify-between border-b border-border pb-4">
           <div>
             <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-primary font-medium mb-1">
               Trusted Brands
             </p>
-            <h2 className="font-sans text-base font-bold tracking-tight text-foreground sm:text-lg">
+            <h2 className="font-sans text-lg font-bold tracking-tight text-foreground md:text-xl">
               Shop By Top Brands
             </h2>
           </div>
-          <Link
-            to="/shop"
-            className="font-sans text-xs font-bold uppercase tracking-wider text-primary hover:underline"
-          >
-            View All →
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={scrollLeft}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-white text-muted-foreground hover:text-foreground transition-colors shadow-sm"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-white text-muted-foreground hover:text-foreground transition-colors shadow-sm"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
-        {/* Brand logo strip */}
-        <div className="mb-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 rounded-xl border border-border bg-white px-6 py-5">
-          {["Herman Miller", "Featherlite", "Steelcase", "Haworth"].map((b) => (
+        {/* Brand logo carousel */}
+        <div
+          ref={scrollRef}
+          className="no-scrollbar mb-10 flex gap-6 overflow-x-auto scroll-smooth py-2 px-1"
+        >
+          {brandLogos.map((brand, idx) => (
             <Link
-              key={b}
+              key={`${brand.name}-${idx}`}
               to="/shop"
-              className="font-display text-lg font-semibold tracking-wide text-foreground/50 transition-all hover:text-primary sm:text-xl"
+              className="flex h-20 w-44 flex-shrink-0 items-center justify-center rounded-lg border border-border/85 bg-white p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/40 hover:-translate-y-0.5 duration-300"
             >
-              {b}
+              <img
+                src={brand.logo}
+                alt={brand.name}
+                className="h-full w-full object-contain"
+              />
             </Link>
           ))}
         </div>

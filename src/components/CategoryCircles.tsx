@@ -2,41 +2,36 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 // Each category uses a REAL product image from /products/
-// Green circle background exactly like the Toqri reference — no laptop
+// Circle background matches the logo's gold accent
 const categories = [
   {
     label: "Accessories",
-    image: "/products/HMAeron4.png",
+    image: "/products/category-accessories.png",
     href: "/shop",
   },
   {
     label: "Adjustable Desk",
-    image: "/products/STEELCASE2.png",
+    image: "/products/category-adjustable-desk.png",
     href: "/shop",
   },
   {
-    label: "Cafeteria Chairs",
-    image: "/products/Featherlite2.png",
+    label: "Cafeteria chairs",
+    image: "/products/category-cafeteria-chairs.png",
     href: "/shop",
   },
   {
     label: "Chairs",
-    image: "/products/HMmirra2-1.png",
+    image: "/products/category-chairs.png",
     href: "/shop",
   },
   {
     label: "Storage",
-    image: "/products/HMclassic2.png",
-    href: "/shop",
-  },
-  {
-    label: "Executive",
-    image: "/products/OptimaHigh1.png",
+    image: "/products/category-storage.png",
     href: "/shop",
   },
   {
     label: "Table",
-    image: "/products/HAWORTH1.png",
+    image: "/products/category-table.png",
     href: "/shop",
   },
 ];
@@ -59,7 +54,7 @@ const CategoryCircles = () => {
           </Link>
         </div>
 
-        {/* Category circles — identical layout to Toqri reference */}
+        {/* Category circles */}
         <div className="flex flex-wrap justify-center gap-6 sm:gap-10 lg:gap-14">
           {categories.map((cat, i) => (
             <motion.div
@@ -73,10 +68,10 @@ const CategoryCircles = () => {
                 to={cat.href}
                 className="group flex flex-col items-center gap-3"
               >
-                {/* Green circle — matches Toqri style exactly */}
+                {/* Logo gold tinted circle */}
                 <div
                   className="relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full transition-all duration-300 group-hover:shadow-lg sm:h-[110px] sm:w-[110px]"
-                  style={{ background: "#e8f5e9" }}
+                  style={{ background: "hsl(47 60% 94%)" }}
                 >
                   <img
                     src={cat.image}

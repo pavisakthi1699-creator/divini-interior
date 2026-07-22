@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCartStore } from "@/stores/cartStore";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart, Minus, Plus, Trash2, Loader2, ShoppingBag } from "lucide-react";
+import { ClipboardList, Minus, Plus, Trash2, Loader2, FileText } from "lucide-react";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,8 +22,8 @@ export const CartDrawer = () => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button className="relative group" aria-label="Shopping cart">
-          <ShoppingCart className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-foreground" />
+        <button className="relative group" aria-label="Enquiry list">
+          <ClipboardList className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-foreground" />
           {totalItems > 0 && (
             <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">
               {totalItems}
@@ -33,17 +33,17 @@ export const CartDrawer = () => {
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-lg flex flex-col h-full bg-background">
         <SheetHeader className="flex-shrink-0">
-          <SheetTitle className="font-display text-xl tracking-wide">Shopping Cart</SheetTitle>
+          <SheetTitle className="font-display text-xl tracking-wide">Enquiry List</SheetTitle>
           <SheetDescription>
-            {totalItems === 0 ? "Your cart is empty" : `${totalItems} item${totalItems !== 1 ? 's' : ''} in your cart`}
+            {totalItems === 0 ? "Your enquiry list is empty" : `${totalItems} item${totalItems !== 1 ? 's' : ''} in your enquiry list`}
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col flex-1 pt-6 min-h-0">
           {items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="font-serif text-muted-foreground">Your cart is empty</p>
+                <ClipboardList className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="font-serif text-muted-foreground">Your enquiry list is empty</p>
               </div>
             </div>
           ) : (
@@ -93,7 +93,7 @@ export const CartDrawer = () => {
                 >
                   {isLoading || isSyncing
                     ? <Loader2 className="w-4 h-4 animate-spin" />
-                    : <><ShoppingBag className="w-4 h-4 mr-2" />Proceed to Checkout</>
+                    : <><FileText className="w-4 h-4 mr-2" />Proceed to Enquiry</>
                   }
                 </Button>
               </div>

@@ -3,31 +3,21 @@ import { MapPin, Phone, Mail, Instagram, Facebook, Linkedin, Youtube } from "luc
 
 const Footer = () => {
   return (
-    <footer className="border-t border-border bg-[#1a1a1a] text-white">
+    <footer className="border-t border-border bg-[#12100d] text-white">
       {/* Main footer */}
       <div className="mx-auto max-w-7xl px-6 py-14 lg:px-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="mb-4 flex items-center gap-2">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{ background: "linear-gradient(135deg, #C9A96E, #8B6914)" }}
-              >
-                <span className="font-display text-base font-bold text-white">DI</span>
-              </div>
-              <div>
-                <p className="font-display text-base font-semibold text-white tracking-wide leading-none">
-                  Divine Interior
-                </p>
-                <p className="font-sans text-[9px] uppercase tracking-[0.3em] mt-0.5" style={{ color: "rgba(201,169,110,0.7)" }}>
-                  Premium Ergonomic Chairs
-                </p>
-              </div>
+            <div className="mb-3 flex items-center gap-3">
+              <img src="/banner/DI-logo.png" alt="Divine Interior Logo" className="h-10 w-auto object-contain brightness-0 invert" />
             </div>
-            <p className="font-sans text-xs font-light leading-relaxed text-white/50 max-w-xs">
-              India's trusted destination for premium ergonomic chairs — Herman Miller, Steelcase, Featherlite, Haworth and more. Quality you can trust, prices you'll love.
+            <p className="font-sans text-[9px] font-semibold uppercase tracking-[0.3em] mt-2 text-primary">
+              Premium Ergonomic Chairs
+            </p>
+            <p className="mt-4 font-sans text-xs font-light leading-relaxed text-white/50 max-w-xs">
+              Divine Interiors is your trusted destination for premium ergonomic office chairs, offering comfortable, durable, and thoughtfully designed seating solutions for businesses, workspaces, and home offices across India.
             </p>
             <div className="mt-5 flex gap-3">
               {[Instagram, Facebook, Linkedin, Youtube].map((Icon, i) => (
@@ -54,12 +44,12 @@ const Footer = () => {
                 { label: "About Us", href: "/about" },
                 { label: "Contact Us", href: "/contact" },
                 { label: "My Account", href: "/account" },
-                { label: "Track Order", href: "/account/orders" },
+                { label: "My Enquiries", href: "/account/orders" },
               ].map((l) => (
                 <Link
                   key={l.label}
                   to={l.href}
-                  className="block font-sans text-xs text-white/45 transition-colors hover:text-white"
+                  className="block font-sans text-xs text-white/45 transition-colors hover:text-primary"
                 >
                   {l.label}
                 </Link>
@@ -77,7 +67,7 @@ const Footer = () => {
                 <Link
                   key={b}
                   to="/shop"
-                  className="block font-sans text-xs text-white/45 transition-colors hover:text-white"
+                  className="block font-sans text-xs text-white/45 transition-colors hover:text-primary"
                 >
                   {b}
                 </Link>
@@ -92,20 +82,20 @@ const Footer = () => {
             </p>
             <div className="space-y-3">
               <div className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary/70" />
+                <MapPin className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary" />
                 <p className="font-sans text-xs leading-relaxed text-white/45">
                   Chennai, Tamil Nadu, India
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="h-3.5 w-3.5 flex-shrink-0 text-primary/70" />
-                <a href="tel:+919876543210" className="font-sans text-xs text-white/45 hover:text-white">
+                <Phone className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
+                <a href="tel:+919876543210" className="font-sans text-xs text-white/45 hover:text-primary transition-colors">
                   +91 98765 43210
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
-                <Mail className="h-3.5 w-3.5 flex-shrink-0 text-primary/70" />
-                <a href="mailto:info@divineinterior.com" className="font-sans text-xs text-white/45 hover:text-white">
+                <Mail className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
+                <a href="mailto:info@divineinterior.com" className="font-sans text-xs text-white/45 hover:text-primary transition-colors">
                   info@divineinterior.com
                 </a>
               </div>
@@ -115,14 +105,14 @@ const Footer = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/8">
+      <div className="border-t border-white/5">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 sm:flex-row lg:px-12">
           <p className="font-sans text-[10px] tracking-[0.2em] text-white/25">
             © {new Date().getFullYear()} Divine Interior. All Rights Reserved.
           </p>
           <div className="flex items-center gap-4">
             {["Privacy Policy", "Terms of Service", "Shipping Policy"].map((l) => (
-              <a key={l} href="#" className="font-sans text-[10px] text-white/25 hover:text-white/60 transition-colors">
+              <a key={l} href="#" className="font-sans text-[10px] text-white/25 hover:text-primary transition-colors">
                 {l}
               </a>
             ))}

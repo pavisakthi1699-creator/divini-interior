@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Loader2, ShoppingBag, Truck, MapPin, User, Phone, Mail, ChevronRight, Banknote } from 'lucide-react';
+import { ArrowLeft, Loader2, ShoppingBag, Truck, MapPin, User, Phone, Mail, ChevronRight, Banknote, ClipboardList, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,8 +66,8 @@ const Checkout = () => {
   }));
 
   const subtotal     = items.reduce((s, i) => s + parseFloat(i.price.amount) * i.quantity, 0);
-  const shippingCost = subtotal >= 50000 ? 0 : 500;
-  const total        = subtotal + shippingCost;
+  const shippingCost = 0;
+  const total        = subtotal;
 
   // Redirect if cart empty
   if (items.length === 0) {
@@ -75,11 +75,11 @@ const Checkout = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="flex flex-col items-center justify-center py-32 text-center px-6">
-          <ShoppingBag className="mb-4 h-16 w-16 text-muted-foreground/30" />
-          <h2 className="font-display text-2xl font-light mb-3">Your cart is empty</h2>
-          <p className="font-sans text-sm text-muted-foreground mb-6">Add some products before checking out.</p>
+          <ClipboardList className="mb-4 h-16 w-16 text-muted-foreground/30" />
+          <h2 className="font-display text-2xl font-light mb-3">Your enquiry list is empty</h2>
+          <p className="font-sans text-sm text-muted-foreground mb-6">Add some products to your enquiry list first.</p>
           <Button asChild className="bg-primary font-sans text-xs font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary/90">
-            <Link to="/shop">Continue Shopping</Link>
+            <Link to="/shop">Browse Office Chairs</Link>
           </Button>
         </div>
         <Footer />
@@ -122,10 +122,10 @@ const Checkout = () => {
 
       <div className="mx-auto max-w-6xl px-6 py-12 lg:px-12">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 font-sans text-xs text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-3.5 w-3.5" /> Continue Shopping
+          <ArrowLeft className="h-3.5 w-3.5" /> Continue Browsing
         </Link>
 
-        <h1 className="font-display text-3xl font-light tracking-wide mb-8">Checkout</h1>
+        <h1 className="font-display text-3xl font-light tracking-wide mb-8">Request a Quote</h1>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
@@ -169,10 +169,10 @@ const Checkout = () => {
               {/* Shipping address */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-lg border border-border bg-card p-6">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <MapPin className="h-4 w-4 text-primary" />
                   </div>
-                  <h2 className="font-display text-lg font-light tracking-wide">Shipping Address</h2>
+                  <h2 className="font-display text-lg font-light tracking-wide">Delivery & Installation Address</h2>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-1.5 sm:col-span-2">
@@ -209,34 +209,34 @@ const Checkout = () => {
                 </div>
               </motion.div>
 
-              {/* Payment method */}
+              {/* Quotation Workflow */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-lg border border-border bg-card p-6">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                    <Banknote className="h-4 w-4 text-primary" />
+                    <FileText className="h-4 w-4 text-primary" />
                   </div>
-                  <h2 className="font-display text-lg font-light tracking-wide">Payment Method</h2>
+                  <h2 className="font-display text-lg font-light tracking-wide">Quotation Workflow</h2>
                 </div>
                 <div className="flex items-start gap-3 rounded-lg border-2 border-primary bg-primary/5 p-4">
                   <div className="mt-0.5 h-4 w-4 rounded-full border-4 border-primary flex-shrink-0" />
                   <div>
-                    <p className="font-sans text-sm font-semibold text-foreground">Cash on Delivery (COD)</p>
-                    <p className="font-sans text-xs text-muted-foreground mt-0.5">Pay in cash when your order arrives. Please keep the exact amount ready.</p>
+                    <p className="font-sans text-sm font-semibold text-foreground">Request for Quote (RFQ)</p>
+                    <p className="font-sans text-xs text-muted-foreground mt-0.5">No immediate payment required. Our sales representative will contact you with a detailed quote containing freight charges, custom sizing, and volume discounts.</p>
                   </div>
                 </div>
               </motion.div>
 
               {/* Notes */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-lg border border-border bg-card p-6">
-                <h2 className="font-display text-base font-light tracking-wide mb-4">Order Notes (optional)</h2>
-                <Textarea {...register('notes')} rows={2} placeholder="Special instructions, delivery preferences…" className="font-sans text-sm resize-none" />
+                <h2 className="font-display text-base font-light tracking-wide mb-4">Enquiry / Specification Notes (optional)</h2>
+                <Textarea {...register('notes')} rows={2} placeholder="Sizing details, special requirements, bulk quantity notes..." className="font-sans text-sm resize-none" />
               </motion.div>
             </div>
 
             {/* ── Right column — Order Summary ── */}
             <div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="rounded-lg border border-border bg-card p-6 sticky top-24">
-                <h2 className="font-display text-lg font-light tracking-wide mb-5">Order Summary</h2>
+                <h2 className="font-display text-lg font-light tracking-wide mb-5">Enquiry Summary</h2>
 
                 <div className="space-y-3 mb-5 max-h-64 overflow-y-auto">
                   {items.map(item => {
@@ -262,18 +262,15 @@ const Checkout = () => {
 
                 <div className="border-t border-border pt-4 space-y-2">
                   <div className="flex justify-between font-sans text-xs text-muted-foreground">
-                    <span>Subtotal</span>
+                    <span>Estimated Product Value</span>
                     <span>₹{subtotal.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between font-sans text-xs text-muted-foreground">
                     <span className="flex items-center gap-1"><Truck className="h-3 w-3" /> Shipping</span>
-                    <span>{shippingCost === 0 ? <span className="text-green-600">Free</span> : `₹${shippingCost}`}</span>
+                    <span className="text-amber-600 font-medium text-right">Calculated in quotation</span>
                   </div>
-                  {shippingCost > 0 && (
-                    <p className="font-sans text-[10px] text-muted-foreground/60">Free shipping on orders above ₹50,000</p>
-                  )}
                   <div className="flex justify-between border-t border-border pt-3 font-sans text-base font-bold text-foreground">
-                    <span>Total</span>
+                    <span>Est. Total</span>
                     <span>₹{total.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
@@ -281,14 +278,14 @@ const Checkout = () => {
                 <Button type="submit" disabled={placing}
                   className="mt-5 w-full bg-primary font-sans text-xs font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary/90 py-6">
                   {placing
-                    ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Placing Order…</>
-                    : <><ShoppingBag className="mr-2 h-4 w-4" /> Place Order (COD)</>
+                    ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting Enquiry…</>
+                    : <><FileText className="mr-2 h-4 w-4" /> Submit Enquiry Request</>
                   }
                 </Button>
 
                 {!user && (
                   <p className="mt-3 text-center font-sans text-[11px] text-muted-foreground">
-                    <Link to="/auth?redirect=/checkout" className="text-primary hover:underline">Sign in</Link> to track your order
+                    <Link to="/auth?redirect=/checkout" className="text-primary hover:underline">Sign in</Link> to track your enquiries
                   </p>
                 )}
               </motion.div>

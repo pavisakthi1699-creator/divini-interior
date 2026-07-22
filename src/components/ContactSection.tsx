@@ -14,16 +14,15 @@ const ContactSection = () => {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <span className="mb-4 inline-block font-sans text-[10px] font-medium uppercase tracking-[0.4em] text-primary">
-              Get in Touch
+            <span className="mb-4 inline-block font-sans text-[10px] font-semibold uppercase tracking-[0.4em] text-primary">
+              GET IN TOUCH
             </span>
             <h2 className="font-display text-3xl font-light tracking-wide sm:text-4xl lg:text-5xl">
-              Begin Your <span className="italic">Journey</span>
+              Transform Your <span className="italic">Workspace</span>
             </h2>
             <div className="my-8 h-[1px] w-16 bg-border" />
             <p className="font-serif text-lg font-light leading-relaxed text-muted-foreground">
-              Let us craft a living experience that reflects your unique style and legacy.
-              Our design consultants are ready to bring your vision to life.
+              Transform your office with ergonomic seating solutions designed for lasting comfort, productivity, and professional style.
             </p>
 
             <div className="mt-12 space-y-6">
@@ -54,7 +53,7 @@ const ContactSection = () => {
                 { label: "Full Name", type: "text", placeholder: "Your name" },
                 { label: "Phone", type: "tel", placeholder: "+91" },
                 { label: "Email", type: "email", placeholder: "your@email.com" },
-                { label: "City", type: "text", placeholder: "City & area of project" },
+                { label: "City", type: "text", placeholder: "City & area" },
               ].map((field, i) => (
                 <div key={i}>
                   <label className="mb-2 block font-sans text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground">
@@ -70,15 +69,15 @@ const ContactSection = () => {
 
               <div>
                 <label className="mb-2 block font-sans text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground">
-                  Service
+                  Seating Category
                 </label>
                 <select className="w-full border-b border-border bg-transparent pb-3 font-serif text-base font-light focus:border-primary focus:outline-none transition-colors duration-300">
-                  <option value="">Select your service</option>
-                  <option value="interior">Interior Design Solutions</option>
-                  <option value="furniture">Bespoke Luxury Furniture</option>
-                  <option value="decor">Exclusive Home Décor</option>
-                  <option value="kitchen">Premium Kitchens</option>
-                  <option value="wardrobe">Luxury Wardrobes</option>
+                  <option value="">Select category</option>
+                  <option value="ergonomic">Ergonomic Office Chairs</option>
+                  <option value="executive">Executive Seating</option>
+                  <option value="workstation">Workstation Chairs</option>
+                  <option value="cafeteria">Cafeteria Seating</option>
+                  <option value="bulk">Bulk Corporate Enquiry</option>
                 </select>
               </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Loader2, ChevronRight, Package } from 'lucide-react';
+import { ClipboardList, Loader2, ChevronRight, Package } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { customerOrdersApi, type Order } from '@/lib/api';
@@ -32,19 +32,19 @@ const AccountOrders = () => {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-2xl font-light tracking-wide">My Orders</h1>
-        <p className="font-sans text-sm text-muted-foreground mt-1">Track and manage your orders</p>
+        <h1 className="font-display text-2xl font-light tracking-wide">My Enquiries</h1>
+        <p className="font-sans text-sm text-muted-foreground mt-1">Track and manage your quote enquiries</p>
       </div>
 
       {loading ? (
         <div className="flex h-40 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
       ) : orders.length === 0 ? (
         <div className="rounded-lg border border-border bg-card py-20 text-center">
-          <ShoppingBag className="mx-auto mb-4 h-12 w-12 text-muted-foreground/30" />
-          <p className="font-display text-xl font-light mb-2">No orders yet</p>
-          <p className="font-sans text-sm text-muted-foreground mb-6">When you place an order, it will appear here.</p>
+          <ClipboardList className="mx-auto mb-4 h-12 w-12 text-muted-foreground/30" />
+          <p className="font-display text-xl font-light mb-2">No enquiries yet</p>
+          <p className="font-sans text-sm text-muted-foreground mb-6">When you submit an enquiry, it will appear here.</p>
           <Button asChild className="bg-primary font-sans text-xs font-bold uppercase tracking-widest text-primary-foreground hover:bg-primary/90">
-            <Link to="/shop">Start Shopping</Link>
+            <Link to="/shop">Browse Office Chairs</Link>
           </Button>
         </div>
       ) : (
@@ -59,7 +59,7 @@ const AccountOrders = () => {
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </Badge>
                     <Badge variant="outline" className="font-sans text-xs">
-                      COD
+                      RFQ
                     </Badge>
                   </div>
                   <p className="font-sans text-xs text-muted-foreground mt-1">

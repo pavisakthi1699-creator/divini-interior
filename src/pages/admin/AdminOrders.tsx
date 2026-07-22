@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Search, Eye, Trash2, MoreHorizontal, ShoppingCart, Loader2 } from 'lucide-react';
+import { Search, Eye, Trash2, MoreHorizontal, ClipboardList, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -58,15 +58,15 @@ const AdminOrders = () => {
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-light tracking-wide">Orders</h1>
-          <p className="font-sans text-sm text-muted-foreground">{total} orders · ₹{totalRevenue.toLocaleString('en-IN')} total</p>
+          <h1 className="font-display text-2xl font-light tracking-wide">Enquiries</h1>
+          <p className="font-sans text-sm text-muted-foreground">{total} enquiries · ₹{totalRevenue.toLocaleString('en-IN')} est. value</p>
         </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search by order #, name or email…" className="pl-9 font-sans text-sm" value={search} onChange={e => setSearch(e.target.value)} />
+          <Input placeholder="Search by enquiry #, name or email…" className="pl-9 font-sans text-sm" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <Select value={statusFilter} onValueChange={v => setStatusFilter(v as any)}>
           <SelectTrigger className="w-full sm:w-44 font-sans text-sm"><SelectValue placeholder="All statuses" /></SelectTrigger>
@@ -82,14 +82,14 @@ const AdminOrders = () => {
           <div className="flex h-48 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
         ) : orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <ShoppingCart className="mb-3 h-10 w-10 text-muted-foreground/40" />
-            <p className="font-sans text-sm text-muted-foreground">No orders found.</p>
+            <ClipboardList className="mb-3 h-10 w-10 text-muted-foreground/40" />
+            <p className="font-sans text-sm text-muted-foreground">No enquiries found.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b border-border bg-muted/30">
-                <tr>{['Order #','Customer','Date','Items','Total','Status','Payment','Actions'].map(h => (
+                <tr>{['Enquiry #','Customer','Date','Items','Est. Value','Status','Quote Status','Actions'].map(h => (
                   <th key={h} className="px-4 py-3 text-left font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap">{h}</th>
                 ))}</tr>
               </thead>
@@ -138,18 +138,18 @@ const AdminOrders = () => {
       <Dialog open={!!viewOrder} onOpenChange={o => !o && setViewOrder(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           {viewOrder && <>
-            <DialogHeader><DialogTitle className="font-display text-lg font-light">Order {viewOrder.order_number}</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle className="font-display text-lg font-light">Enquiry {viewOrder.order_number}</DialogTitle></DialogHeader>
             <div className="space-y-5 pt-2">
               <div className="flex flex-wrap gap-3">
                 <div>
-                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Order Status</p>
+                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Enquiry Status</p>
                   <Select value={viewOrder.status} onValueChange={v => updateStatus(viewOrder.id, 'status', v)}>
                     <SelectTrigger className="h-8 w-36 font-sans text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>{ORDER_STATUSES.map(s => <SelectItem key={s} value={s} className="capitalize text-xs">{s}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Payment</p>
+                  <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Quote Status</p>
                   <Select value={viewOrder.payment_status} onValueChange={v => updateStatus(viewOrder.id, 'payment_status', v)}>
                     <SelectTrigger className="h-8 w-32 font-sans text-xs"><SelectValue /></SelectTrigger>
                     <SelectContent>{PAYMENT_STATUSES.map(s => <SelectItem key={s} value={s} className="capitalize text-xs">{s}</SelectItem>)}</SelectContent>
@@ -165,7 +165,7 @@ const AdminOrders = () => {
                 </div>
                 {viewOrder.shipping_address && (
                   <div className="rounded-lg border border-border bg-muted/20 p-4">
-                    <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Ship To</p>
+                    <p className="font-sans text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Deliver To</p>
                     <div className="font-sans text-xs text-foreground space-y-0.5">
                       <p>{viewOrder.shipping_address.line1}</p>
                       <p>{viewOrder.shipping_address.city}, {viewOrder.shipping_address.state} {viewOrder.shipping_address.postal_code}</p>
@@ -193,9 +193,9 @@ const AdminOrders = () => {
               )}
               <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-2">
                 <div className="flex justify-between font-sans text-xs text-muted-foreground"><span>Subtotal</span><span>₹{Number(viewOrder.subtotal).toLocaleString('en-IN')}</span></div>
-                <div className="flex justify-between font-sans text-xs text-muted-foreground"><span>Shipping</span><span>₹{Number(viewOrder.shipping_cost).toLocaleString('en-IN')}</span></div>
+                <div className="flex justify-between font-sans text-xs text-muted-foreground"><span>Shipping</span><span className="text-amber-600 font-medium">Calculated post-enquiry</span></div>
                 {viewOrder.discount > 0 && <div className="flex justify-between font-sans text-xs text-green-600"><span>Discount</span><span>−₹{Number(viewOrder.discount).toLocaleString('en-IN')}</span></div>}
-                <div className="flex justify-between border-t border-border pt-2 font-sans text-sm font-bold"><span>Total</span><span>₹{Number(viewOrder.total).toLocaleString('en-IN')}</span></div>
+                <div className="flex justify-between border-t border-border pt-2 font-sans text-sm font-bold"><span>Est. Total</span><span>₹{Number(viewOrder.subtotal).toLocaleString('en-IN')}</span></div>
               </div>
             </div>
           </>}
@@ -203,7 +203,7 @@ const AdminOrders = () => {
       </Dialog>
 
       <ConfirmDialog open={!!delTarget} onOpenChange={o => !o && setDelTarget(null)}
-        title="Delete Order" description={`Delete order ${delTarget?.order_number}? Cannot be undone.`}
+        title="Delete Enquiry" description={`Delete enquiry ${delTarget?.order_number}? Cannot be undone.`}
         confirmLabel="Delete" onConfirm={handleDelete} />
     </div>
   );

@@ -3,51 +3,17 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, ArrowLeft, ShoppingCart, Package, Star } from "lucide-react";
 import { productsApi, type Product } from "@/lib/api";
-import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-// Convert MySQL product → cart-compatible shape
-function toCartProduct(p: Product) {
-  return {
-    node: {
-      id: String(p.id),
-      title: p.title,
-      description: p.description,
-      handle: p.slug,
-      priceRange: {
-        minVariantPrice: { amount: String(p.price), currencyCode: p.currency },
-      },
-      images: {
-        edges: p.images.map(url => ({ node: { url, altText: p.title } })),
-      },
-      variants: {
-        edges: [{
-          node: {
-            id: `variant-${p.id}`,
-            title: 'Default',
-            price: { amount: String(p.price), currencyCode: p.currency },
-            compareAtPrice: p.compare_at_price
-              ? { amount: String(p.compare_at_price), currencyCode: p.currency }
-              : null,
-            availableForSale: p.stock > 0,
-            selectedOptions: [{ name: 'Size', value: 'Standard' }],
-          },
-        }],
-      },
-      options: (p.options as any[]) || [],
-    },
-  };
-}
+import { EnquiryModal } from "@/components/EnquiryModal";
 
 const ProductDetail = () => {
   const { handle } = useParams<{ handle: string }>();
   const [product, setProduct]           = useState<Product | null>(null);
   const [loading, setLoading]           = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const addItem   = useCartStore(s => s.addItem);
-  const isLoading = useCartStore(s => s.isLoading);
+  const [enquiryOpen, setEnquiryOpen]     = useState(false);
 
   useEffect(() => {
     if (!handle) return;
@@ -58,19 +24,8 @@ const ProductDetail = () => {
       .finally(() => setLoading(false));
   }, [handle]);
 
-  const handleAddToCart = async () => {
-    if (!product) return;
-    const cartProduct = toCartProduct(product);
-    const variant = cartProduct.node.variants.edges[0].node;
-    await addItem({
-      product: cartProduct as any,
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity: 1,
-      selectedOptions: variant.selectedOptions,
-    });
-    toast.success("Added to cart", { description: product.title });
+  const handleEnquire = () => {
+    setEnquiryOpen(true);
   };
 
   // ─── Loading ─────────────────────────────────────────────
@@ -281,25 +236,21 @@ const ProductDetail = () => {
               </span>
             </div>
 
-            {/* Add to cart */}
+            {/* Enquiry Now */}
             <button
-              onClick={handleAddToCart}
-              disabled={isLoading || !inStock}
+              onClick={handleEnquire}
+              disabled={!inStock}
               className="mt-8 w-full border border-primary bg-primary py-4 font-sans text-[11px] font-medium uppercase tracking-[0.3em] text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed rounded-sm"
             >
-              {isLoading
-                ? 'Adding…'
-                : inStock
-                ? 'Add to Cart'
-                : 'Sold Out'}
+              {inStock ? 'Enquiry Now' : 'Sold Out'}
             </button>
 
             {/* Trust badges */}
             <div className="mt-6 grid grid-cols-3 gap-3 border-t border-border pt-6">
               {[
-                { icon: '🔒', label: 'Secure Checkout' },
-                { icon: '🚚', label: 'Free Delivery ₹50k+' },
-                { icon: '↩️', label: 'Easy Returns' },
+                { icon: '📄', label: 'Customized Quotes' },
+                { icon: '🚚', label: 'Pan-India Delivery' },
+                { icon: '💬', label: 'Expert Advice' },
               ].map(b => (
                 <div key={b.label} className="flex flex-col items-center gap-1 text-center">
                   <span className="text-lg">{b.icon}</span>
@@ -312,6 +263,12 @@ const ProductDetail = () => {
       </section>
 
       <Footer />
+
+      <EnquiryModal
+        product={product}
+        isOpen={enquiryOpen}
+        onClose={() => setEnquiryOpen(false)}
+      />
     </div>
   );
 };

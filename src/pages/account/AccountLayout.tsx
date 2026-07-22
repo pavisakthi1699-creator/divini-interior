@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { User, ShoppingBag, MapPin, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { User, ShoppingBag, MapPin, Settings, LogOut, ChevronRight, ClipboardList } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useCustomerStore } from '@/stores/customerStore';
 import { getCustomerToken } from '@/lib/api';
@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 
 const NAV = [
-  { label: 'My Orders',  href: '/account/orders',   icon: ShoppingBag },
+  { label: 'My Enquiries',  href: '/account/orders',   icon: ClipboardList },
   { label: 'Profile',    href: '/account/profile',   icon: User },
   { label: 'Addresses',  href: '/account/addresses', icon: MapPin },
 ];

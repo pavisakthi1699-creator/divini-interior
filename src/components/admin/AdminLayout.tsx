@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Package, ShoppingCart, FileText,
   Users, UserCog, LogOut, Menu, Bell, Settings,
-  ExternalLink, BarChart2, HelpCircle,
+  ExternalLink, BarChart2, HelpCircle, ClipboardList,
 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -25,7 +25,7 @@ const NAV_GROUPS = [
   {
     label: 'Sales',
     items: [
-      { label: 'Orders',    href: '/studio/orders',    icon: ShoppingCart },
+      { label: 'Enquiries',    href: '/studio/orders',    icon: ClipboardList },
     ],
   },
   {
@@ -54,7 +54,7 @@ const PAGE_NAMES: Record<string, string> = {
   '':          'Dashboard',
   'analytics': 'Analytics',
   'products':  'Products',
-  'orders':    'Orders',
+  'orders':    'Enquiries',
   'blogs':     'Blogs',
   'customers': 'Customers',
   'users':     'Settings',
